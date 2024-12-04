@@ -1,79 +1,239 @@
-MelodAI
-==============================
+# MelodAI
 
-
-
-Instructions
-------------
-1. Clone the repo.
-2. Run `make dirs` to create the missing parts of the directory structure described below.
-3. *Optional:* Run `make virtualenv` to create a python virtual environment. Skip if using conda or some other env manager.
-   1. Run `source env/bin/activate` to activate the virtualenv.
-4. Run `make requirements` to install required python packages.
-5. Put the raw data in `data/raw`.
-6. To save the raw data to the DVC cache, run `dvc add data/raw`
-7. Edit the code files to your heart's desire.
-8. Process your data, train and evaluate your model using `dvc repro` or `make reproduce`
-9. To run the pre-commit hooks, run `make pre-commit-install`
-10. For setting up data validation tests, run `make setup-setup-data-validation`
-11. For **running** the data validation tests, run `make run-data-validation`
-12. When you're happy with the result, commit files (including .dvc files) to git.
-
-Project Organization
-------------
-
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make dirs` or `make clean`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   ├── raw.dvc        <- DVC file that tracks the raw data
-    │   └── raw            <- The original, immutable data dump
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │   └── metrics.txt    <- Relevant metrics after evaluating the model.
-    │   └── training_metrics.txt    <- Relevant metrics from training the model.
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- Makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   ├── great_expectations  <- Folder containing data integrity check files
-    │   │   ├── make_dataset.py
-    │   │   └── data_validation.py  <- Script to run data integrity checks
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    ├── .pre-commit-config.yaml  <- pre-commit hooks file with selected hooks for the projects.
-    ├── dvc.lock           <- The version definition of each dependency, stage, and output from the 
-    │                         data pipeline.
-    └── dvc.yaml           <- Defining the data pipeline stages, dependencies, and outputs.
-
-
---------
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
-
+### **Project Structure Note: Music Style Detection and Recommendation Application**
 
 ---
 
-To create a project like this, just go to https://dagshub.com/repo/create and select the **Cookiecutter DVC** project template.
+## **Context and Objectives**
 
-Made with 🐶 by [DAGsHub](https://dagshub.com/).
+### **1. Context**
+
+The project aims to develop a web application that integrates a machine learning model in production. This application
+will identify the precise musical style of a given song and provide recommendations based on the detected style.
+
+### **2. Objectives**
+
+- **Input**: A song title or artist name.
+- **Output**:
+    - Detection of the specific musical style (potentially including secondary styles).
+    - Suggestions for similar songs.
+- Deploy the application on a cloud platform with a publicly accessible URL.
+
+---
+
+## **Technical Specifications**
+
+### **1. Recommended Technologies**
+
+- **Backend**: Python (FastAPI).
+- **Frontend**: ReactJS.
+- **Database**: Supabase or NeonDB for storing history and metadata.
+- **APIs**:
+  - Spotify Web API for retrieving song data and audio features.
+  - MusicBrainz for additional metadata on tracks.
+- **Data Collection**:
+    - Kaggle Datasets for initial experiments.
+    - Spotify API for real-time audio features.
+    - MusicBrainz for additional metadata."
+- **Machine Learning**:
+  - Supervised models for music style classification.
+    - Clustering models for generating similar recommendations.
+- **CI/CD**: GitHub Actions for automating tests, builds, and deployments.
+- **Docker**: For service containerization.
+- **Cloud Platform**: Railway or AWS for hosting the application.
+
+---
+
+### **2. Project Architecture**
+
+#### **Key Components:**
+
+1. **Frontend**:
+    - User interface for song or artist input.
+    - Display of detected styles and recommendations.
+2. **Backend**:
+    - REST API to:
+        - Handle user requests.
+        - Process music data through ML models.
+3. **ML Pipeline**:
+    - Data preprocessing (audio features extraction).
+    - Style classification and recommendation generation.
+4. **CI/CD**:
+    - Automated testing (unit, integration, end-to-end).
+    - Continuous deployment pipelines.
+5. **Database**:
+    - Storing user history and recommendation results.
+6. **Dockerization**:
+    - Containerizing components for seamless deployment.
+
+---
+
+## **Development Steps**
+
+### **1. Planning and Preparation**
+
+#### **Define Musical Styles & Methods**
+
+- Prepare a list of APIs, datasets, and music features required for model training and predictions for continuous data
+  ingestion.
+- Approach musical styles dynamically rather than restricting to predefined genres.
+- Rely on a flexible, data-driven classification approach that can adapt to emerging styles.
+- Integrate continuous monitoring and data drift detection tools to ensure model robustness and adaptability over time.
+
+#### **Set Up APIs**
+
+- **Usage**:  
+  For the MVP using a Kaggle dataset, APIs will be primarily considered for future integration.
+    - **Spotify Web API**: Retrieve and enrich tracks with real-time audio features, ensuring the model remains
+      up-to-date with evolving music trends.
+    - **MusicBrainz**: Augment metadata coverage (release date, album info, track relationships) to refine
+      classification and recommendation quality.  
+      In the MVP phase, their main role is to be integrated into the pipeline design, even if their full utilization
+      comes after initial model validation on the Kaggle dataset.
+
+#### **Establish Git Architecture**
+
+1. **Structured Branches**:
+    - **`dev`**: Used for active development. All new features, bug fixes, and experiments originate here.
+    - **`staging`**: Used for testing and validating completed features in an environment similar to production.
+    - **`production`**: The final branch for the stable, production-ready version of the application.
+
+2. **Branching Workflow**:
+    - Developers create **feature branches** from `dev` for isolated work on new features or bug fixes.
+    - Completed features are merged into `dev` via pull requests with code reviews to maintain quality.
+    - Once a set of features is ready, `dev` is merged into `staging` for testing, and subsequently into `production`
+      upon successful validation.
+
+#### **DagsHub Setup**
+
+1. **Repository Initialization**:
+    - Create a DagsHub repository for tracking datasets, models, and experiments.
+    - Clone the repository locally and integrate it with your GitHub project.
+
+2. **DVC Configuration**:
+    - Initialize DVC in the project:
+      ```bash
+      dvc init
+      ```
+    - Add datasets and models to DVC:
+      ```bash
+      dvc add data/
+      dvc add models/
+      ```
+    - Link DVC to remote storage (e.g., S3 or Google Drive):
+      ```bash
+      dvc remote add -d storage s3://my-dvc-storage
+      ```
+    - Push data and models to the remote storage:
+      ```bash
+      dvc push
+      ```
+
+3. **MLflow Integration**:
+    - Configure MLflow to track experiments directly in the DagsHub interface:
+      ```python
+      mlflow.set_tracking_uri("https://dagshub.com/<username>/<repository>.mlflow")
+      ```
+
+### **2. Data Collection and Preparation**
+
+- **Data Collection via Spotify API**:
+    - **Audio Features (Core)**:
+        - **Rhythmic Features**: Tempo, beats per minute.
+        - **Harmonic Features**: Key, mode.
+        - **Timbre and Tonal Features**: Spectral centroid, MFCCs (Mel-Frequency Cepstral Coefficients).
+        - **Energy and Dynamics**: Loudness, energy, dynamic range.
+        - **Mood/Valence Indicators**: Valence, danceability.  
+          These features form the backbone of both classification and recommendation tasks.
+
+    - **Metadata (Core)**:
+        - **Track-Level**: Title, duration, explicitness.
+        - **Artist-Level**: Artist name, primary genre tags, popularity metrics.
+        - **Album-Level**: Release year, label metadata.
+        - **External Popularity Metrics**: Streaming counts, listener engagement stats.
+
+- **MVP Dataset**:
+    - Use a Kaggle dataset as a starting point for initial experiments.
+    - Focus on a limited set of styles, ensuring a manageable scope during early development.
+
+- **Preprocessing**:
+    - Clean and organize the data.
+    - Balance samples across styles for model training.
+
+### **3. Machine Learning Development**
+
+#### **Style Detection**:
+
+- Supervised model for style classification.
+- Model training and evaluation on curated datasets.
+
+#### **Recommendation Generation**:
+
+- Clustering using audio features.
+- Similarity search based on distance metrics (e.g., cosine or Euclidean).
+
+### **4. Application Development**
+
+#### **Frontend**:
+
+- User-friendly form for song or artist input.
+- Intuitive display of detected styles and recommendations.
+
+#### **Backend**:
+
+- REST API to:
+    - Fetch and process song data via APIs.
+    - Interact with the ML model for predictions.
+    - Manage user history storage in the database.
+
+---
+
+### **5. Integration and Automation**
+
+- **CI/CD with GitHub Actions**:
+    - Unit tests for the backend and ML model.
+    - Integration tests for frontend-backend interaction.
+    - End-to-end tests to validate the complete user experience.
+
+- **Dockerization**:
+    - Create Dockerfiles for frontend, backend, and ML model.
+    - Use docker-compose for service orchestration.
+
+---
+
+### **6. Deployment**
+
+- Host containers on **Railway** or **AWS**.
+- Provide a **public URL** for application access.
+
+---
+
+## **Evaluation Criteria**
+
+1. **Git Structure**:
+    - Organized branches (`dev`, `staging`, `production`).
+2. **ML Features**:
+    - Accurate style detection and relevant recommendations.
+3. **CI/CD**:
+    - Functional workflows for testing, building, and deploying.
+4. **Deployed Application**:
+    - Intuitive interface, accessible via a public URL.
+5. **Technical Quality**:
+    - Comprehensive testing (unit, integration, end-to-end).
+    - Successful containerization and deployment.
+
+---
+
+## **Indicative Timeline**
+
+| **Step**                | **Responsible**     |
+|-------------------------|---------------------|
+| Research and definition | Entire team         |
+| Data collection         | Salah, Matthieu     |
+| ML model development    | Matthieu            |
+| Frontend development    | Wandrille           |
+| Backend development     | Matthieu, Wandrille |
+| Integration and CI/CD   | Wandrille, Salah    |
+| Testing and deployment  | Entire team         |
+
+---
