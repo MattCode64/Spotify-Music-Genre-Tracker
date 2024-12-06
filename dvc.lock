@@ -48,6 +48,6 @@ stages:
       size: 0
     outs:
     - path: data/processed
-      md5: 42b91f15923dec1eb64f1a6d95f568e6.dir
-      size: 9038000
+      md5: 5cc0ca6e19e6e4b5ca94a1cc47cb2e16.dir
+      size: 28132601
       nfiles: 1

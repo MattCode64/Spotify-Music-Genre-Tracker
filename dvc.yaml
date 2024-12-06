@@ -25,5 +25,5 @@ stages:
     - data/raw
     - src/data/make_dataset.py
     outs:
-#    - data/processed:
-#        persist: true
+    - data/processed:
+        persist: true
