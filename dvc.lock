@@ -37,17 +37,17 @@ stages:
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
   process_data:
-    cmd: python -m src.data.make_dataset
+    cmd: python3 -m src.data.make_dataset
     deps:
     - path: data/raw
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 10ba4c74e54e419534f3585ea07922e2.dir
+      size: 28690003
+      nfiles: 6
     - path: src/data/make_dataset.py
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
     outs:
     - path: data/processed
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 42b91f15923dec1eb64f1a6d95f568e6.dir
+      size: 9038000
+      nfiles: 1
