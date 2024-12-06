@@ -29,15 +29,15 @@ will identify the precise musical style of a given song and provide recommendati
 - **Frontend**: ReactJS.
 - **Database**: Supabase or NeonDB for storing history and metadata.
 - **APIs**:
-  - Spotify Web API for retrieving song data and audio features.
-  - MusicBrainz for additional metadata on tracks.
+    - Spotify Web API for retrieving song data and audio features.
+    - MusicBrainz for additional metadata on tracks.
 - **Data Collection**:
     - Kaggle Datasets for initial experiments.
     - Spotify API for real-time audio features.
     - MusicBrainz for additional metadata."
 - **Machine Learning**:
-  - Supervised models for music style classification.
-    - Clustering models for generating similar recommendations.
+    - Supervised models for music style classification.
+        - Clustering models for generating similar recommendations.
 - **CI/CD**: GitHub Actions for automating tests, builds, and deployments.
 - **Docker**: For service containerization.
 - **Cloud Platform**: Railway or AWS for hosting the application.
@@ -152,9 +152,20 @@ will identify the precise musical style of a given song and provide recommendati
         - **Album-Level**: Release year, label metadata.
         - **External Popularity Metrics**: Streaming counts, listener engagement stats.
 
+- **Data Versioning with DVC**:
+    - **Data Versioning**:
+        - Use DVC to version control datasets and track changes over time.
+        - Ensure reproducibility and traceability and collaboration.
+    - **Data Stockage**:
+        - Store datasets in a dedicated `data/` directory.
+        - **_Amazon S3_** is used as a remote storage for this project.
+        
+
 - **MVP Dataset**:
     - Use a Kaggle dataset as a starting point for initial experiments.
     - Focus on a limited set of styles, ensuring a manageable scope during early development.
+  
+  Source : [Kaggle Spotify Tracks Datasets](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset?resource=download)
 
 - **Preprocessing**:
     - Clean and organize the data.
