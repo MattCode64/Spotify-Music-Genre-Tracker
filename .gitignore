@@ -87,3 +87,7 @@ coverage.xml
 
 # Mypy cache
 .mypy_cache/
+
+# MLFlow
+mlruns/
+mlartifacts/
