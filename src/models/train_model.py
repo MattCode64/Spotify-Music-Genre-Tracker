@@ -35,7 +35,7 @@ def train_and_log_model(experiment_name="default"):
     # Début d'un run
     with mlflow.start_run():
         # Définir et entraîner le modèle
-        model = RandomForestClassifier(n_estimators=11, random_state=42)
+        model = RandomForestClassifier(max_depth=89, random_state=42)
         model.fit(X_train, y_train)
 
         # Évaluer les performances
