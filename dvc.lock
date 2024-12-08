@@ -1,23 +1,23 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python -m src.models.train_model
+    cmd: python3 -m src.models.train_model
     deps:
     - path: data/processed
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 873b0b823b0d5af1e9f906c79ff4144e.dir
+      size: 28132601
+      nfiles: 1
     - path: src/models/train_model.py
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 23d703db0de5a6dc77742d12758b2189
+      size: 2682
     outs:
     - path: models
       md5: d751713988987e9331980363e24189ce.dir
       size: 0
       nfiles: 0
     - path: reports/training_metrics.csv
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: ed6e628679e56b1eddde5c5bebffc5a5
+      size: 55
   eval:
     cmd: python -m src.models.predict_model
     deps:
@@ -44,10 +44,10 @@ stages:
       size: 28690003
       nfiles: 6
     - path: src/data/make_dataset.py
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: b2e347c147da2b5026861bdafae8093c
+      size: 2100
     outs:
     - path: data/processed
-      md5: 5cc0ca6e19e6e4b5ca94a1cc47cb2e16.dir
+      md5: 873b0b823b0d5af1e9f906c79ff4144e.dir
       size: 28132601
       nfiles: 1

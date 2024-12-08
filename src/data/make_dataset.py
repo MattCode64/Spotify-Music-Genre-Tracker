@@ -38,9 +38,9 @@ def save_data(df, path):
 
 
 def main():
-    dataset_path = "../data/raw/dataset.csv"
+    dataset_path = "/home/matthieu/UbuntuData/PycharmProjects/MelodAI/data/raw/dataset.csv"
     # preprocessed_dataset_path = "../data/processed/preprocessed_dataset.csv"
-    final_dataset_path = "../data/processed/dataset_ready.csv"
+    final_dataset_path = "/home/matthieu/UbuntuData/PycharmProjects/MelodAI/data/processed/final_dataset.csv"
 
     # Load data
     df = load_data(dataset_path)
