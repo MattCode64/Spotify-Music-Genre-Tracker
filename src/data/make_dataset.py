@@ -1,5 +1,11 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+import os
+
+# Dynamically determine the project root
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+DATA_PATH = os.path.join(PROJECT_ROOT, "data/raw/dataset.csv")
+PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.csv")
 
 
 def load_data(dataset_path):
@@ -38,9 +44,9 @@ def save_data(df, path):
 
 
 def main():
-    dataset_path = "/home/matthieu/UbuntuData/PycharmProjects/MelodAI/data/raw/dataset.csv"
+    dataset_path = DATA_PATH
     # preprocessed_dataset_path = "../data/processed/preprocessed_dataset.csv"
-    final_dataset_path = "/home/matthieu/UbuntuData/PycharmProjects/MelodAI/data/processed/final_dataset.csv"
+    final_dataset_path = PROCESSED_DATA_PATH
 
     # Load data
     df = load_data(dataset_path)
