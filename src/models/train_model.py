@@ -1,7 +1,6 @@
 import os
 
 import dagshub
-import joblib
 import mlflow
 import mlflow.sklearn
 import pandas as pd
@@ -56,7 +55,7 @@ def train_and_log_model(experiment_name="default"):
     with mlflow.start_run():
         # Set parameters
         params = {
-            "n_estimators": 100,
+            "max_depth": 11,
             "random_state": 42
         }
 
@@ -72,8 +71,8 @@ def train_and_log_model(experiment_name="default"):
         recall = recall_score(y_test, predictions, average="weighted")
 
         # Log parameters
-        mlflow.log_param("n_estimators", params["n_estimators"])
-        # mlflow.log_param("max_depth", params["max_depth"])
+        # mlflow.log_param("n_estimators", params["n_estimators"])
+        mlflow.log_param("max_depth", params["max_depth"])
         mlflow.log_param("random_state", params["random_state"])
 
         # Log metrics
@@ -100,11 +99,6 @@ def train_and_log_model(experiment_name="default"):
         print(f"F1 Score: {f1:.4f}")
         print(f"Precision: {precision:.4f}")
         print(f"Recall: {recall:.4f}")
-
-        # Save locally models
-        model_name = "rf_model.pkl"
-        model_path = os.path.join(PROJECT_ROOT, "models", model_name)
-        joblib.dump(model, model_path)
 
 
 if __name__ == "__main__":
