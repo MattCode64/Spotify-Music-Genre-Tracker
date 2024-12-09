@@ -40,11 +40,13 @@ def train_and_log_model(experiment_name="default"):
 
     # Start an MLFlow run
     with mlflow.start_run():
-        # Define and train the model
-        max_depth = 13
-        rand_state = 42
+        # Set parameters
+        params = {
+            "max_depth": 5,
+            "random_state": 42
+        }
 
-        model = RandomForestClassifier(max_depth=max_depth, random_state=rand_state)
+        model = RandomForestClassifier(**params)
         model.fit(X_train, y_train)
 
         # Evaluate performance
@@ -54,8 +56,8 @@ def train_and_log_model(experiment_name="default"):
         f1 = f1_score(y_test, predictions, average="weighted")
 
         # Log parameters
-        mlflow.log_param("max_depth", max_depth)
-        mlflow.log_param("random_state", rand_state)
+        mlflow.log_param("max_depth", params["max_depth"])
+        mlflow.log_param("random_state", params["random_state"])
 
         # Log metrics
         mlflow.log_metric("accuracy", accuracy)

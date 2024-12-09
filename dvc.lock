@@ -3,21 +3,20 @@ stages:
   train:
     cmd: python3 -m src.models.train_model
     deps:
-    - path: data/processed
-      md5: 873b0b823b0d5af1e9f906c79ff4144e.dir
+    - path: data/processed/final_dataset.csv
+      md5: 8781957292192175550284aac5c502a7
       size: 28132601
-      nfiles: 1
     - path: src/models/train_model.py
-      md5: 357c186469c3637ab2cdab1478a34d6d
-      size: 2879
+      md5: 2efd2b1d13e569a8e9ed257889791b8c
+      size: 2894
     outs:
     - path: models
       md5: d751713988987e9331980363e24189ce.dir
       size: 0
       nfiles: 0
     - path: reports/training_metrics.csv
-      md5: ed6e628679e56b1eddde5c5bebffc5a5
-      size: 55
+      md5: 9f69244dbc5d85ca93746a1d293a4062
+      size: 58
   eval:
     cmd: python -m src.models.predict_model
     deps:
@@ -47,7 +46,6 @@ stages:
       md5: b01188ef5ae37d868bcaeae70bac051a
       size: 2253
     outs:
-    - path: data/processed
-      md5: 873b0b823b0d5af1e9f906c79ff4144e.dir
+    - path: data/processed/final_dataset.csv
+      md5: 8781957292192175550284aac5c502a7
       size: 28132601
-      nfiles: 1
