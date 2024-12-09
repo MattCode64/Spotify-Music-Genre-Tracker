@@ -1,11 +1,12 @@
+import os
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-import os
 
 # Dynamically determine the project root
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 DATA_PATH = os.path.join(PROJECT_ROOT, "data/raw/dataset.csv")
-PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/test_final_dataset.csv")
+PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.csv")
 
 
 def load_data(dataset_path):
@@ -43,6 +44,15 @@ def save_data(df, path):
     df.to_csv(path, index=False)
 
 
+def select_features(df, cols):
+    try:
+        selected_df = df[cols]
+    except KeyError as e:
+        print(f"Error: One or more columns not found in the dataframe: {e}")
+        return None
+    return selected_df
+
+
 def main():
     dataset_path = DATA_PATH
     # preprocessed_dataset_path = "../data/processed/preprocessed_dataset.csv"
@@ -74,6 +84,14 @@ def main():
     col_to_standardize = ['popularity', 'duration_ms', 'explicit', 'danceability', 'energy', 'loudness', 'speechiness',
                           'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
     df = standardize_columns(df, col_to_standardize)
+
+    # Select specific features
+    selected_columns = ['danceability', 'energy', 'loudness', 'instrumentalness', 'valence', 'track_genre_encoded']
+    df = select_features(df, selected_columns)
+
+    # Save final dataset
+    if df is not None:
+        save_data(df, final_dataset_path)
 
     # Save final dataset
     save_data(df, final_dataset_path)

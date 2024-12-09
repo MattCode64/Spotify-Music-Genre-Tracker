@@ -2,4 +2,4 @@
     remote = s3_remote
     autostage = true
 ['remote "s3_remote"']
-    url = s3://s3-melodai-project
+    url = s3://s3-melodai-project/processed/
