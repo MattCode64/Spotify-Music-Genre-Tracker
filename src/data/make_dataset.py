@@ -5,7 +5,7 @@ import os
 # Dynamically determine the project root
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 DATA_PATH = os.path.join(PROJECT_ROOT, "data/raw/dataset.csv")
-PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.csv")
+PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/test_final_dataset.csv")
 
 
 def load_data(dataset_path):
