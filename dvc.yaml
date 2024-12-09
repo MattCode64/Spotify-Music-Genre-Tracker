@@ -24,6 +24,6 @@ stages:
     deps:
     - data/raw
     - src/data/make_dataset.py
-#    outs:
-#    - data/processed/final_dataset.csv:
-#        persist: true
+    outs:
+    - data/processed:
+        persist: true

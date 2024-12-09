@@ -46,6 +46,7 @@ stages:
       md5: b01188ef5ae37d868bcaeae70bac051a
       size: 2253
     outs:
-    - path: data/processed/final_dataset.csv
-      md5: 8781957292192175550284aac5c502a7
-      size: 28132601
+    - path: data/processed
+      md5: 67506c47713b39664048c55369134d22.dir
+      size: 28132709
+      nfiles: 3
