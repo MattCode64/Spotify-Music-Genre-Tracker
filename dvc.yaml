@@ -1,8 +1,9 @@
 stages:
   train:
-    cmd: python3 -m src.models.train_model
+    cmd: python3 -m src.models.run_sagemaker_job
     deps:
     - data/processed
+    - src/models/run_sagemaker_job.py
     - src/models/train_model.py
     outs:
     - models:
