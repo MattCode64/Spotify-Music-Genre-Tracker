@@ -56,8 +56,7 @@ def train_and_log_model(experiment_name="default"):
     with mlflow.start_run():
         # Set parameters
         params = {
-            "n_estimators": 12,
-            "max_depth": 11,
+            "n_estimators": 100,
             "random_state": 42
         }
 
@@ -74,7 +73,7 @@ def train_and_log_model(experiment_name="default"):
 
         # Log parameters
         mlflow.log_param("n_estimators", params["n_estimators"])
-        mlflow.log_param("max_depth", params["max_depth"])
+        # mlflow.log_param("max_depth", params["max_depth"])
         mlflow.log_param("random_state", params["random_state"])
 
         # Log metrics
