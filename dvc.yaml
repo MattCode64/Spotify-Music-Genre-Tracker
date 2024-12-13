@@ -15,7 +15,7 @@ stages:
 #    deps:
 #    - data/processed
 #    - models
-#    - src/models/predict_model.py
+  #    - src/modelsH/predict_model.py
 #    metrics:
 #    - reports/metrics.csv:
 #        cache: false

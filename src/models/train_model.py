@@ -18,18 +18,6 @@ PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.c
 METRICS_PATH = os.path.join(PROJECT_ROOT, "reports/training_metrics.csv")
 
 
-# # Définir le chemin du dataset dans SageMaker
-# DVC_CACHE_DIR = os.environ.get("SM_CHANNEL_TRAIN", "data/processed")  # Chemin par défaut pour Sagemaker
-# DVC_REMOTE = "s3://s3-melodai-project/processed"
-#
-# # Synchroniser les données avec DVC
-# print("Synchronisation des données avec DVC...")
-# subprocess.run(["dvc", "pull"], check=True)
-#
-# # Continuer avec l'entraînement après avoir tiré les données
-# print(f"Les données sont disponibles dans : {DVC_CACHE_DIR}")
-
-
 def train_and_log_model(experiment_name="default"):
     # Configure MLFlow for local tracking
     DAGSHUB_URI = "https://dagshub.com/MattCode64/MelodAI.mlflow"
