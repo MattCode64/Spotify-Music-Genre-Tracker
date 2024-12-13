@@ -91,3 +91,7 @@ coverage.xml
 # MLFlow
 mlruns/
 mlartifacts/
+
+# Other
+/non_official_models
+/test.csv
