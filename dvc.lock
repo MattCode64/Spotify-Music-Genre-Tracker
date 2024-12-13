@@ -44,10 +44,10 @@ stages:
       size: 28690003
       nfiles: 6
     - path: src/data/make_dataset.py
-      md5: 23a6cbc2f35418058ddc2f2061ad11a7
-      size: 2759
+      md5: 0fc6bbaece6901f3f4a84d8ca09d054d
+      size: 3089
     outs:
     - path: data/processed
-      md5: 3c7e3e4480aed38933263c5a73ff1117.dir
-      size: 11526018
+      md5: 39d4663aa1c7d7e5a6555a28a59a658f.dir
+      size: 7257893
       nfiles: 1
