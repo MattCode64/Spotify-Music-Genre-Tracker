@@ -49,8 +49,8 @@ stages:
       nfiles: 6
     - path: src/data/make_dataset.py
       hash: md5
-      md5: f7f05c7130ec81ca1c4cd74b1f8ab568
-      size: 5103
+      md5: bba57f41bcc6302a9993b81db9f80d5f
+      size: 5132
     outs:
     - path: data/processed
       md5: 39d4663aa1c7d7e5a6555a28a59a658f.dir

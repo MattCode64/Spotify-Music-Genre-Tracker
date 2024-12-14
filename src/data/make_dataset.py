@@ -65,18 +65,16 @@ def save_data_locally(df, path):
     df.to_csv(path, index=False)
 
 
-import os
 from sklearn.model_selection import train_test_split
 
 
-def split_and_save_datasets(X, y,
-                            test_size=0.2,
-                            val_size=None,
-                            stratify=True,
-                            random_state=42,
-                            save_path=None):
+def split_datasets(X, y,
+                   test_size=0.2,
+                   val_size=None,
+                   stratify=True,
+                   random_state=42):
     """
-    Splits data into train/test or train/val/test sets and optionally saves to disk.
+    Splits data into train/test or train/val/test sets.
 
     Parameters:
         X (pd.DataFrame): Features dataframe.
@@ -85,7 +83,6 @@ def split_and_save_datasets(X, y,
         val_size (float, optional): Proportion of the training data to allocate to the validation set.
         stratify (bool): Whether to use stratified sampling based on `y`.
         random_state (int): Random seed for reproducibility.
-        save_path (str, optional): Directory path to save the split datasets as files.
 
     Returns:
         tuple: Returns the splits as tuples:
@@ -105,19 +102,6 @@ def split_and_save_datasets(X, y,
         X_train, X_val, y_train, y_val = train_test_split(
             X_train, y_train, test_size=val_size, stratify=y_train if stratify else None, random_state=random_state
         )
-
-    # Save datasets if save_path is provided
-    if save_path:
-        os.makedirs(save_path, exist_ok=True)
-
-        X_train.to_csv(os.path.join(save_path, "X_train.csv"), index=False)
-        X_test.to_csv(os.path.join(save_path, "X_test.csv"), index=False)
-        y_train.to_csv(os.path.join(save_path, "y_train.csv"), index=False, header=True)
-        y_test.to_csv(os.path.join(save_path, "y_test.csv"), index=False, header=True)
-
-        if val_size:
-            X_val.to_csv(os.path.join(save_path, "X_val.csv"), index=False)
-            y_val.to_csv(os.path.join(save_path, "y_val.csv"), index=False, header=True)
 
     # Return datasets as tuple
     if val_size:
@@ -143,6 +127,8 @@ def main():
 
     # Apply UMAP for dimensionality reduction
     df = apply_umap(df, 'track_genre_encoded', n_components=6)
+
+    # TODO: Data validation
 
     # Save processed data
     save_data_locally(df, PROCESSED_DATA_PATH)

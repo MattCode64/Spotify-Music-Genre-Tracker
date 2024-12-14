@@ -7,10 +7,14 @@ import mlflow
 import mlflow.sklearn
 import pandas as pd
 from dotenv import load_dotenv
+from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
+from sklearn.metrics import classification_report
 
-from src.data.make_dataset import split_and_save_datasets
+from src.data.make_dataset import split_datasets
+from src.visualization.visualize import fig_confusion_matrix
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +27,19 @@ PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.c
 METRICS_PATH = os.path.join(PROJECT_ROOT, "reports/training_metrics.csv")
 
 
-def train_and_log_model(experiment_name="default", path=None, target=None, params=dict):
+def classification_metrics(y_test, y_pred, file_path):
+    report = classification_report(y_test, y_pred)
+
+    with open(file_path, 'w') as file:
+        file.write(report)
+    print(f"Le rapport a été sauvegardé dans {file_path}")
+
+
+def train_and_log_model(experiment_name="default",
+                        model='LogisticRegression',
+                        path=None,
+                        target=None,
+                        params=dict):
     # Configure MLFlow for local tracking
     DAGSHUB_URI = "https://dagshub.com/MattCode64/MelodAI.mlflow"
     os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USERNAME")
@@ -42,13 +58,12 @@ def train_and_log_model(experiment_name="default", path=None, target=None, param
 
     # Split the data (train and test)
     try:
-        X_train, X_val, X_test, y_train, y_val, y_test = split_and_save_datasets(
-            data.drop(columns=[target]),
-            data[target],
-            test_size=0.5,
-            stratify=True,
-            random_state=42
-        )
+        X_train, X_test, y_train, y_test = split_datasets(data.drop(columns=[target]),
+                                                          data[target],
+                                                          test_size=0.3,
+                                                          stratify=True,
+                                                          random_state=42
+                                                          )
     except Exception as e:
         logging.error(f"Error during dataset splitting: {e}")
         return
@@ -59,8 +74,21 @@ def train_and_log_model(experiment_name="default", path=None, target=None, param
     # Start an MLFlow run
     with mlflow.start_run():
         try:
-            model = RandomForestClassifier(**params)
-            logging.info("Training model...")
+            if model == "RandomForest":
+                model = RandomForestClassifier(**params)
+                logging.info("Training RandomForest model...")
+
+            elif model == "LogisticRegression":
+                model = LogisticRegression(**params)
+                logging.info("Training LogisticRegression model...")
+
+            elif model == "LightGBM":
+                model = LGBMClassifier(**params)
+                logging.info("Training LightGBM model...")
+            else:
+                logging.error("Unsupported model type")
+                return
+
             model.fit(X_train, y_train)
             logging.info("Model trained successfully!")
 
@@ -90,7 +118,6 @@ def train_and_log_model(experiment_name="default", path=None, target=None, param
                 "precision": [precision],
                 "recall": [recall]
             })
-            os.makedirs(os.path.dirname(METRICS_PATH), exist_ok=True)
             metrics_df.to_csv(METRICS_PATH, index=False)
 
             logging.info(f"Model trained and logged with accuracy: {accuracy:.4f}")
@@ -98,8 +125,32 @@ def train_and_log_model(experiment_name="default", path=None, target=None, param
             logging.info(f"Precision: {precision:.4f}")
             logging.info(f"Recall: {recall:.4f}")
 
+            fig_confusion_matrix(y_test, predictions, os.path.join(PROJECT_ROOT, "reports/figures/Training-confusion_matrix.png"))
+
+            classification_metrics(y_test, predictions, os.path.join(PROJECT_ROOT, "reports/training_classification_report.txt"))
+
+            # Input example
+            input_example = pd.DataFrame({
+                "UMAP1": [8.4346075],
+                "UMAP2": [-2.5405962],
+                "UMAP3": [-2.6248655],
+                "UMAP4": [7.920587],
+                "UMAP5": [-0.8108143],
+                "UMAP6": [6.02044]
+            })  # Track genre : 41
+
+            signature = mlflow.models.infer_signature(input_example, model.predict(input_example))
+
+            # Log the model
+            mlflow.sklearn.log_model(sk_model=model,
+                                     artifact_path="Artifacts",
+                                     input_example=input_example,
+                                     signature=signature,
+                                     registered_model_name="LogisticRegression")
+
         except MemoryError:
             logging.error("Memory error during model training. Consider reducing the batch size or optimizing memory usage.")
+
         except Exception as e:
             logging.error(f"Unexpected error during training: {e}")
 
@@ -108,7 +159,7 @@ def train_and_log_model(experiment_name="default", path=None, target=None, param
             gc.collect()
 
 
-if __name__ == "__main__":
+def main():
     # Initialize DagsHub integration
     try:
         dagshub.init(repo_owner="MattCode64", repo_name="MelodAI", mlflow=True)
@@ -119,9 +170,14 @@ if __name__ == "__main__":
     try:
         train_and_log_model(
             experiment_name="Hi khodor",
+            model='LogisticRegression',
             path=PROCESSED_DATA_PATH,
             target='track_genre_encoded',
             params={}
         )
     except Exception as e:
         logging.error(f"Error during training execution: {e}")
+
+
+if __name__ == "__main__":
+    main()

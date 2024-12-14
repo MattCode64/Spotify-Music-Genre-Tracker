@@ -89,8 +89,8 @@ coverage.xml
 .mypy_cache/
 
 # MLFlow
-mlruns/
-mlartifacts/
+/mlartifacts
+/mlruns
 
 # Other
 /non_official_models
