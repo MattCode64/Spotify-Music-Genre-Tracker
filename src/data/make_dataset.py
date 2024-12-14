@@ -5,7 +5,7 @@ import umap
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
-from src.data.dagshub_interactions import upload_file_to_dagshub
+from src.utils.dagshub_interactions import upload_file_to_dagshub
 
 # Dynamically determine the project root
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -65,6 +65,67 @@ def save_data_locally(df, path):
     df.to_csv(path, index=False)
 
 
+import os
+from sklearn.model_selection import train_test_split
+
+
+def split_and_save_datasets(X, y,
+                            test_size=0.2,
+                            val_size=None,
+                            stratify=True,
+                            random_state=42,
+                            save_path=None):
+    """
+    Splits data into train/test or train/val/test sets and optionally saves to disk.
+
+    Parameters:
+        X (pd.DataFrame): Features dataframe.
+        y (pd.Series): Target series.
+        test_size (float): Proportion of the data to allocate to the test set.
+        val_size (float, optional): Proportion of the training data to allocate to the validation set.
+        stratify (bool): Whether to use stratified sampling based on `y`.
+        random_state (int): Random seed for reproducibility.
+        save_path (str, optional): Directory path to save the split datasets as files.
+
+    Returns:
+        tuple: Returns the splits as tuples:
+              (X_train, X_test, y_train, y_test) or
+              (X_train, X_val, X_test, y_train, y_val, y_test).
+    """
+    # Ensure stratification is handled
+    stratify_param = y if stratify else None
+
+    # Initial split into train and test
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_size, stratify=stratify_param, random_state=random_state
+    )
+
+    if val_size:
+        # Further split training data into train and validation
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_train, y_train, test_size=val_size, stratify=y_train if stratify else None, random_state=random_state
+        )
+
+    # Save datasets if save_path is provided
+    if save_path:
+        os.makedirs(save_path, exist_ok=True)
+
+        X_train.to_csv(os.path.join(save_path, "X_train.csv"), index=False)
+        X_test.to_csv(os.path.join(save_path, "X_test.csv"), index=False)
+        y_train.to_csv(os.path.join(save_path, "y_train.csv"), index=False, header=True)
+        y_test.to_csv(os.path.join(save_path, "y_test.csv"), index=False, header=True)
+
+        if val_size:
+            X_val.to_csv(os.path.join(save_path, "X_val.csv"), index=False)
+            y_val.to_csv(os.path.join(save_path, "y_val.csv"), index=False, header=True)
+
+    # Return datasets as tuple
+    if val_size:
+        return X_train, X_val, X_test, y_train, y_val, y_test
+    else:
+        return X_train, X_test, y_train, y_test
+
+
 def main():
     # Load raw data
     df = load_data(RAW_DATA_PATH)
@@ -78,9 +139,6 @@ def main():
     columns_to_drop = ['Unnamed: 0', 'track_id', 'artists', 'album_name', 'track_name', 'track_genre']
     df = drop_columns(df, columns_to_drop)
 
-    # columns_to_standardize = ['popularity', 'duration_ms', 'explicit', 'danceability', 'energy', 'loudness',
-    #                           'speechiness',
-    #                           'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
     df = standardize_columns(df, df.drop(columns=['track_genre_encoded']).columns)
 
     # Apply UMAP for dimensionality reduction
