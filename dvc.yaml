@@ -18,12 +18,12 @@ stages:
     metrics:
     - reports/training_metrics.csv:
         cache: false
-  eval:
-    cmd: python3 -m src.models.predict_model
-    deps:
-      - data/processed
-      - models
-        - src/models/predict_model.py
-    metrics:
-      - reports/metrics.csv:
-          cache: false
+#  eval:
+#    cmd: python3 -m src.models.predict_model
+#    deps:
+#      - data/processed
+#      - models
+#        - src/models/predict_model.py
+#    metrics:
+#      - reports/metrics.csv:
+#          cache: false
