@@ -11,7 +11,7 @@ from src.utils.dagshub_interactions import upload_file_to_dagshub
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 RAW_DATA_PATH = os.path.join(PROJECT_ROOT, "data/raw/dataset.csv")
 PROCESSED_DATA_PATH = os.path.join(PROJECT_ROOT, "data/processed/final_dataset.csv")
-MODEL_PATH = os.path.join(PROJECT_ROOT, "models/model.pkl")
+MODEL_PATH = os.path.join(PROJECT_ROOT, "models/model_name.pkl")
 
 
 # Stage: process_data

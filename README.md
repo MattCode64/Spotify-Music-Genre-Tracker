@@ -1,3 +1,4 @@
+![Project](/Logo.webp)
 # MelodAI
 
 ### **Project Structure Note: Music Style Detection and Recommendation Application**
@@ -34,10 +35,10 @@ will identify the precise musical style of a given song and provide recommendati
 - **Data Collection**:
     - Kaggle Datasets for initial experiments.
     - Spotify API for real-time audio features.
-    - MusicBrainz for additional metadata."
+  - MusicBrainz for additional metadata.
 - **Machine Learning**:
     - Supervised models for music style classification.
-        - Clustering models for generating similar recommendations.
+  - Clustering models for generating similar recommendations.
 - **CI/CD**: GitHub Actions for automating tests, builds, and deployments.
 - **Docker**: For service containerization.
 - **Cloud Platform**: Railway or AWS for hosting the application.
@@ -181,7 +182,7 @@ will identify the precise musical style of a given song and provide recommendati
 #### **Recommendation Generation**:
 
 - Clustering using audio features.
-- Similarity search based on distance metrics (e.g., cosine or Euclidean).
+- Similarity search.
 
 ### **4. Application Development**
 
