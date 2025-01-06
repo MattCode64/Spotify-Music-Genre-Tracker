@@ -50,7 +50,7 @@ def standardize_columns(df, columns):
 def apply_umap(df, target_column, n_components=2):
     umap_reducer = umap.UMAP(n_components=n_components, random_state=42)
     df_std_scaler = df.drop(columns=[target_column])
-    reduced = umap_reducer.fit_transform(df_std_scaler)
+    reduced = umap_reducer.transform(df_std_scaler)
 
     # Create a DataFrame with UMAP components
     df_umap = pd.DataFrame(reduced, columns=[f'UMAP{i + 1}' for i in range(n_components)])
@@ -123,12 +123,16 @@ def main():
     columns_to_drop = ['Unnamed: 0', 'track_id', 'artists', 'album_name', 'track_name', 'track_genre']
     df = drop_columns(df, columns_to_drop)
 
+    columns_to_keep = ['popularity', 'duration_ms', 'explicit', 'danceability', 'energy',
+                       'key', 'loudness', 'mode', 'speechiness', 'acousticness',
+                       'instrumentalness', 'liveness', 'valence', 'tempo', 'time_signature',
+                       'track_genre_encoded']
+    df = df[columns_to_keep]
+
     df = standardize_columns(df, df.drop(columns=['track_genre_encoded']).columns)
 
-    # Apply UMAP for dimensionality reduction
-    df = apply_umap(df, 'track_genre_encoded', n_components=6)
-
-    # TODO: Data validation
+    # # Apply UMAP for dimensionality reduction
+    # df = apply_umap(df, 'track_genre_encoded', n_components=6)
 
     # Save processed data
     save_data_locally(df, PROCESSED_DATA_PATH)

@@ -5,24 +5,24 @@ stages:
     deps:
     - path: data/processed
       hash: md5
-      md5: 39d4663aa1c7d7e5a6555a28a59a658f.dir
-      size: 7257893
+      md5: aaff87c0f6a20fde129d54c0d3fd57cd.dir
+      size: 34145235
       nfiles: 1
     - path: src/models/train_model.py
       hash: md5
-      md5: e544131a531fb29bbeb3f2a6ee7ef93c
-      size: 7361
+      md5: 3b4de49ed2c85a3c1c7cd9bc18dad2c1
+      size: 7576
       isexec: true
     outs:
     - path: models
       hash: md5
-      md5: 41bd5a61dd2dfca1b986dffd04bd9ff3.dir
-      size: 1474834242
-      nfiles: 2
+      md5: efd8ce059c7209d7f96ba1e8fd1fd6eb.dir
+      size: 3930828087
+      nfiles: 9
     - path: reports/training_metrics.csv
       hash: md5
-      md5: 7fb0ce93e5e7b4ac062aa2da4e998c94
-      size: 113
+      md5: 7f77f21089f4a109dd022e92819b037d
+      size: 115
   eval:
     cmd: python -m src.models.predict_model
     deps:
@@ -45,15 +45,17 @@ stages:
     cmd: python3 -m src.data.make_dataset
     deps:
     - path: data/raw
-      md5: 10ba4c74e54e419534f3585ea07922e2.dir
-      size: 28690003
-      nfiles: 6
+      hash: md5
+      md5: 1fdbfb123fa611c7cef8e1a0f54cf889.dir
+      size: 29649258
+      nfiles: 10
     - path: src/data/make_dataset.py
       hash: md5
-      md5: c91e99c7a7a409daac670ec859fba8eb
-      size: 4298
+      md5: 931ef9c5975bf489e351ce66df389fdd
+      size: 4609
     outs:
     - path: data/processed
-      md5: 39d4663aa1c7d7e5a6555a28a59a658f.dir
-      size: 7257893
+      hash: md5
+      md5: aaff87c0f6a20fde129d54c0d3fd57cd.dir
+      size: 34145235
       nfiles: 1

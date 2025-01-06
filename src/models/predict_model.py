@@ -1,26 +1,92 @@
 import mlflow
 import pandas as pd
+import umap
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+
+from src.data.make_data_for_prediction import make_data_for_prediction
 
 # Configurer le tracking URI distant
 DAGSHUB_URI = "https://dagshub.com/MattCode64/MelodAI.mlflow"
 mlflow.set_tracking_uri(DAGSHUB_URI)
 
-try:
+
+def label_encode(df, column):
+    encoder = LabelEncoder()
+    df[column + '_encoded'] = encoder.fit_transform(df[column])
+    return df
+
+
+def replace_boolean(df, column):
+    df[column] = df[column].replace({True: 1, False: 0})
+    df[column] = df[column].infer_objects(copy=False)
+    return df
+
+
+def drop_missing_values(df):
+    df.dropna(inplace=True)
+    return df
+
+
+def drop_columns(df, columns):
+    df.drop(columns=columns, inplace=True)
+    return df
+
+
+def standardize_columns(df, columns):
+    scaler = StandardScaler()
+    df[columns] = scaler.fit_transform(df[columns])
+    return df
+
+
+def apply_umap(df, target_column, n_components=2):
+    umap_reducer = umap.UMAP(n_components=n_components, random_state=42)
+    df_std_scaler = df.drop(columns=[target_column])
+    reduced = umap_reducer.fit_transform(df_std_scaler)
+
+    # Create a DataFrame with UMAP components
+    df_umap = pd.DataFrame(reduced, columns=[f'UMAP{i + 1}' for i in range(n_components)])
+
+    # Concatenate with the target column
+    df_umap = pd.concat([df_umap, df[target_column].reset_index(drop=True)], axis=1)
+
+    return df_umap
+
+
+def main():
+    print(f"Starting {main.__name__}")
     # Charger le modèle distant
     model_uri = "runs:/6f31d1a4f3074535805b56933e52ead4/Artifacts"
-    model = mlflow.pyfunc.load_model(model_uri)
+    model = mlflow.pyfunc.load_model(model_uri, dst_path="/home/matthieu/UbuntuData/PycharmProjects/MelodAI/models")
     print("Modèle chargé avec succès.")
 
-    # Tester une prédiction
-    data = pd.DataFrame({
-        "UMAP1": [8.4346075],
-        "UMAP2": [-2.5405962],
-        "UMAP3": [-2.6248655],
-        "UMAP4": [7.920587],
-        "UMAP5": [-0.8108143],
-        "UMAP6": [6.02044]
-    })  # Track genre : 41
-    predictions = model.predict(data)
+    # Read 1st line of a csv file
+    input_data = {
+        "track_id": "5SuOikwiRyPMVoIQDJUgSV",
+        "artists": "Gen Hoshino",
+        "album_name": "Comedy",
+        "track_name": "Comedy",
+        "popularity": 73,
+        "duration_ms": 230666,
+        "explicit": False,
+        "danceability": 0.676,
+        "energy": 0.461,
+        "key": 1,
+        "loudness": -6.746,
+        "mode": 0,
+        "speechiness": 0.143,
+        "acousticness": 0.0322,
+        "instrumentalness": 1.01e-06,
+        "liveness": 0.358,
+        "valence": 0.715,
+        "tempo": 87.917,
+        "time_signature": 4,
+        "track_genre": "acoustic"
+    }
+
+    # Créer un DataFrame à partir des données
+    data = make_data_for_prediction(input_data)
+    predictions = model.predict(data.drop(columns=['track_genre_encoded']))
     print(f"Prédictions : {predictions}")
 
     track_genre_dict = {
@@ -143,5 +209,6 @@ try:
     track_genre = list(track_genre_dict.keys())[list(track_genre_dict.values()).index(predictions[0])]
     print(f"Genre prédit : {track_genre}")
 
-except Exception as e:
-    print(f"Erreur : {e}")
+
+if __name__ == '__main__':
+    main()

@@ -94,7 +94,7 @@ def train_and_log_model(experiment_name="default",
                 logging.info("Training LightGBM model_name...")
             elif model_name == "XGBoost":
                 model = xgb.XGBClassifier(**params)
-                logging.info("Training XGBoost model_name...")
+                logging.info("Training XGBoost model...")
             else:
                 logging.error("Unsupported model_name type")
                 return
@@ -137,18 +137,23 @@ def train_and_log_model(experiment_name="default",
             logging.info(f"Recall: {recall:.4f}")
 
             fig_confusion_matrix(y_test, predictions, os.path.join(PROJECT_ROOT, "reports/figures/Training-confusion_matrix.png"))
+            # Log it as an artifact
+            mlflow.log_artifact(os.path.join(PROJECT_ROOT, "reports/figures/Training-confusion_matrix.png"))
 
             classification_metrics(y_test, predictions, os.path.join(PROJECT_ROOT, "reports/training_classification_report.txt"))
+            # Log it as an artifact
+            mlflow.log_artifact(os.path.join(PROJECT_ROOT, "reports/training_classification_report.txt"))
 
             # Input example
-            input_example = pd.DataFrame({
-                "UMAP1": [8.4346075],
-                "UMAP2": [-2.5405962],
-                "UMAP3": [-2.6248655],
-                "UMAP4": [7.920587],
-                "UMAP5": [-0.8108143],
-                "UMAP6": [6.02044]
-            })  # Track genre : 41
+            # input_example = pd.DataFrame({
+            #     "UMAP1": [8.4346075],
+            #     "UMAP2": [-2.5405962],
+            #     "UMAP3": [-2.6248655],
+            #     "UMAP4": [7.920587],
+            #     "UMAP5": [-0.8108143],
+            #     "UMAP6": [6.02044]
+            # })  # Track genre : 41
+            input_example = X_test.iloc[0:1]
 
             signature = mlflow.models.infer_signature(input_example, model.predict(input_example))
 
@@ -156,8 +161,7 @@ def train_and_log_model(experiment_name="default",
             mlflow.sklearn.log_model(sk_model=model,
                                      artifact_path="Artifacts",
                                      input_example=input_example,
-                                     signature=signature,
-                                     registered_model_name=model_name)
+                                     signature=signature)
 
         except MemoryError:
             logging.error("Memory error during model_name training. Consider reducing the batch size or optimizing memory usage.")
@@ -181,12 +185,10 @@ def main():
     try:
         train_and_log_model(
             experiment_name="Hi khodor",
-            model_name='RandomForest',
+            model_name='LightGBM',
             path=PROCESSED_DATA_PATH,
             target='track_genre_encoded',
-            params={
-                'n_estimators': 89,
-                'random_state': 42}
+            params={'random_state': 42}
         )
     except Exception as e:
         logging.error(f"Error during training execution: {e}")
